@@ -1,0 +1,105 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "ios-sideload",
+  "title": "iOS Sideload",
+  "description": "Confirm and sideload configured iOS apps with Makefile-style build detection",
+  "icon": "extension-icon.png",
+  "author": "nyaran2910",
+  "categories": ["Developer Tools", "Productivity"],
+  "license": "MIT",
+  "platforms": ["macOS"],
+  "commands": [
+    {
+      "name": "index",
+      "title": "Renew iOS Sideloads",
+      "description": "Review build or update plan and sideload iOS apps",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "projectDirs",
+      "title": "Project Directories",
+      "description": "Semicolon-separated paths to iOS app project directories. Leave blank to load from ~/.config/raycast/ios-sideload.json.",
+      "placeholder": "~/Workspace/apps/MyApp; ~/Workspace/apps/AnotherApp",
+      "type": "textfield",
+      "required": false
+    },
+    {
+      "name": "defaultMode",
+      "title": "Default Mode",
+      "description": "How each app should be processed unless overridden per project.",
+      "type": "dropdown",
+      "required": false,
+      "default": "auto",
+      "data": [
+        { "title": "Auto (Makefile: Build if sources changed, else Install)", "value": "auto" },
+        { "title": "Update Only (Install existing .app without building)", "value": "install" },
+        { "title": "Force Rebuild & Install", "value": "build" }
+      ]
+    },
+    {
+      "name": "teamId",
+      "title": "Apple Team ID",
+      "description": "Development team ID passed to xcodebuild and APPLE_DEVELOPMENT_TEAM. Leave blank to load from ~/.config/raycast/ios-sideload.json.",
+      "placeholder": "ABCDE12345",
+      "type": "textfield",
+      "required": false
+    },
+    {
+      "name": "deviceId",
+      "title": "Fallback Device UDID",
+      "description": "Used if no paired physical device is auto-detected. Leave blank to load from ~/.config/raycast/ios-sideload.json.",
+      "placeholder": "00000000-0000000000000000",
+      "type": "textfield",
+      "required": false
+    },
+    {
+      "name": "alwaysRenewProvisioning",
+      "title": "Renew Provisioning to 7 Days",
+      "label": "Refresh provisioning profile to 7 days on every run",
+      "description": "Evicts stale cached profiles and re-signs with a fresh 7-day profile when sources are unchanged.",
+      "type": "checkbox",
+      "required": false,
+      "default": true
+    },
+    {
+      "name": "profileExpiryHours",
+      "title": "Fallback Renewal Threshold",
+      "description": "Used when 'Renew Provisioning to 7 Days' is unchecked.",
+      "type": "dropdown",
+      "required": false,
+      "default": "24",
+      "data": [
+        { "title": "Off (Never refresh provisioning)", "value": "off" },
+        { "title": "Expired only", "value": "0" },
+        { "title": "Within 24 hours", "value": "24" },
+        { "title": "Within 48 hours", "value": "48" },
+        { "title": "Within 72 hours", "value": "72" }
+      ]
+    },
+    {
+      "name": "launchAfterInstall",
+      "title": "Launch After Install",
+      "label": "Launch app on device after installing",
+      "description": "Automatically launch each installed app via devicectl.",
+      "type": "checkbox",
+      "required": false,
+      "default": false
+    }
+  ],
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "typecheck": "tsc --noEmit",
+    "lint": "ray lint"
+  },
+  "dependencies": {
+    "@raycast/api": "^2.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/react": "19.3.0",
+    "typescript": "^5.7.2"
+  }
+}
